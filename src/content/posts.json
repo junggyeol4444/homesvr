@@ -1,0 +1,58 @@
+[
+  {
+    "id": "post-welcome",
+    "slug": "welcome",
+    "title": "4444 크루 허브 오픈",
+    "title_en": "Welcome to the 4444 Crew Hub",
+    "excerpt": "새로운 공식 허브에서 일정, 공지, 하이라이트를 한 번에 확인하세요.",
+    "excerpt_en": "Check the official hub for schedules, notices, and highlights in one place.",
+    "cover": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+    "body": "# 4444 크루 허브 오픈!\n\n이제 방송 일정, 공지, 하이라이트를 한 곳에서 확인하실 수 있습니다.\n\n- 일정: 주간/월간으로 정리된 방송 캘린더\n- 멤버: 각 멤버의 소개와 SNS 링크\n- VOD: 플랫폼별로 정리된 다시보기\n\n홈 화면을 홈 화면에 추가하면 더욱 빠르게 접근할 수 있어요.",
+    "body_en": "# Welcome to the 4444 Crew Hub!\n\nAll schedules, announcements and highlights now live in one place.\n\n- Schedule: weekly & monthly calendar of upcoming shows\n- Members: learn about each crew member and socials\n- VOD: highlights organised by platform\n\nAdd the hub to your home screen for instant access!",
+    "tags": ["공지", "소개"],
+    "publishedAt": "2025-07-15T02:00:00+09:00",
+    "author": "aurora"
+  },
+  {
+    "id": "post-guest",
+    "slug": "guest-collab",
+    "title": "게스트 콜라보 예고",
+    "title_en": "Guest Collaboration Teaser",
+    "excerpt": "다음 주 토크 라운지에는 인기 스트리머 NOVA가 함께합니다.",
+    "excerpt_en": "Next week's talk lounge features fan-favourite streamer NOVA.",
+    "cover": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+    "body": "## 특별 게스트와 함께하는 라이브!\n\n이번 주 토크 라운지에는 인기 스트리머 **NOVA**가 함께합니다. 사전 질문을 댓글로 남겨주세요.",
+    "body_en": "## Going live with a special guest!\n\nThis week's talk lounge invites **NOVA** as our guest host. Leave your questions in the comments!",
+    "tags": ["게스트", "토크"],
+    "publishedAt": "2025-07-18T10:00:00+09:00",
+    "author": "muse"
+  },
+  {
+    "id": "post-merch",
+    "slug": "merch-drop",
+    "title": "첫 번째 굿즈 출시",
+    "title_en": "First Merch Drop",
+    "excerpt": "새로운 로고 굿즈가 출시됩니다. 수익의 10%는 팬 커뮤니티 이벤트에 사용됩니다.",
+    "excerpt_en": "Our new logo merch drops soon—10% of profits go back to community events.",
+    "cover": "https://images.unsplash.com/photo-1525182008055-f88b95ff7980?auto=format&fit=crop&w=1200&q=80",
+    "body": "새로운 로고 굿즈가 출시됩니다. 한정 수량으로 진행되며 팬 커뮤니티 이벤트에 사용될 예정입니다.",
+    "body_en": "Our brand new logo merch is here! Quantities are limited and a portion goes back into community events.",
+    "tags": ["굿즈", "쇼핑"],
+    "publishedAt": "2025-07-05T09:00:00+09:00",
+    "author": "ray"
+  },
+  {
+    "id": "post-schedule",
+    "slug": "august-lineup",
+    "title": "8월 방송 라인업",
+    "title_en": "August Stream Line-up",
+    "excerpt": "8월 한 달간 예정된 모든 방송을 한 눈에 정리했습니다.",
+    "excerpt_en": "See every stream planned for August at a glance.",
+    "cover": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80",
+    "body": "### 8월 주요 일정\n\n- 16일: 공포게임 심야 라이브\n- 19일: 제작자 Q&A\n- 23일: 틱톡 챌린지 라이브\n\n캘린더 구독을 통해 자동으로 일정 알림을 받아보세요.",
+    "body_en": "### August Highlights\n\n- 16th: Late-night horror live\n- 19th: Creator Q&A\n- 23rd: TikTok challenge live\n\nSubscribe to the calendar feed for reminders.",
+    "tags": ["일정", "하이라이트"],
+    "publishedAt": "2025-07-25T12:00:00+09:00",
+    "author": "aurora"
+  }
+]

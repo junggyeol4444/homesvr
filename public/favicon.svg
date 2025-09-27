@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="4444 Crew logo">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3c7dff"/>
+      <stop offset="100%" stop-color="#215de6"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="32" fill="url(#grad)"/>
+  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="'Inter', 'Noto Sans KR', sans-serif" font-size="52" font-weight="700" fill="#ffffff">44</text>
+  <text x="50%" y="78%" dominant-baseline="middle" text-anchor="middle" font-family="'Inter', 'Noto Sans KR', sans-serif" font-size="24" font-weight="600" fill="#ffffff" opacity="0.9">Crew</text>
+</svg>

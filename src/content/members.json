@@ -1,0 +1,69 @@
+[
+  {
+    "id": "mem-aurora",
+    "slug": "aurora",
+    "name": "오로라 (Aurora)",
+    "role": "리더 & 메인 진행",
+    "bio": "밝고 에너지 넘치는 리더로 커뮤니티 프로그램과 브랜드 협업을 총괄합니다.",
+    "bio_en": "Energetic lead host overseeing community programming and brand partnerships.",
+    "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80",
+    "socials": {
+      "youtube": "https://youtube.com/@aurora4444",
+      "instagram": "https://instagram.com/aurora4444",
+      "x": "https://x.com/aurora4444",
+      "email": "mailto:hello@4444crew.com"
+    },
+    "featuredVods": ["vod-001", "vod-004"],
+    "noticePinned": "post-welcome",
+    "focus": ["MC", "Community", "Strategy"],
+    "pronouns": "she/her"
+  },
+  {
+    "id": "mem-nova",
+    "slug": "nova",
+    "name": "노바 (Nova)",
+    "role": "게임 마스터",
+    "bio": "호러·미스터리 게임 전문. 전략적인 플레이와 리액션이 강점입니다.",
+    "bio_en": "Horror & mystery game master with strategic plays and big reactions.",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
+    "socials": {
+      "youtube": "https://youtube.com/@nova4444",
+      "twitch": "https://twitch.tv/nova4444"
+    },
+    "featuredVods": ["vod-002", "vod-005"],
+    "focus": ["Horror", "Competitive", "Hosting"],
+    "pronouns": "he/him"
+  },
+  {
+    "id": "mem-muse",
+    "slug": "muse",
+    "name": "뮤즈 (Muse)",
+    "role": "콘텐츠 프로듀서",
+    "bio": "음악과 편집을 책임지는 크리에이티브 디렉터.",
+    "bio_en": "Creative director in charge of music and editing.",
+    "avatar": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80",
+    "socials": {
+      "youtube": "https://youtube.com/@muse4444",
+      "tiktok": "https://www.tiktok.com/@muse4444"
+    },
+    "featuredVods": ["vod-003"],
+    "focus": ["Music", "Post-production", "Brand"],
+    "pronouns": "they/them"
+  },
+  {
+    "id": "mem-ray",
+    "slug": "ray",
+    "name": "레이 (Ray)",
+    "role": "커뮤니티 매니저",
+    "bio": "팬 커뮤니티와 협업 프로젝트를 총괄합니다.",
+    "bio_en": "Community manager overseeing fan engagement and collaborations.",
+    "avatar": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=600&q=80",
+    "socials": {
+      "instagram": "https://instagram.com/ray4444",
+      "x": "https://x.com/ray4444"
+    },
+    "featuredVods": ["vod-006"],
+    "focus": ["Community", "Events", "Growth"],
+    "pronouns": "she/her"
+  }
+]
