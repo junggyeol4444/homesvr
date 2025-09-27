@@ -12,16 +12,16 @@ export async function GET() {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//4444 Crew//Schedule//EN',
+    'PRODID:-//쌀가루집안//Schedule//KO',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
-    'X-WR-CALNAME:4444 Crew Streams',
+    'X-WR-CALNAME:쌀가루집안 일정',
     'X-WR-TIMEZONE:Asia/Seoul'
   ];
 
   items.forEach((episode) => {
     lines.push('BEGIN:VEVENT');
-    lines.push(`UID:${episode.id}@4444crew`);
+    lines.push(`UID:${episode.id}@ssalgaru`);
     lines.push(`DTSTAMP:${formatDate(new Date().toISOString())}`);
     lines.push(`DTSTART:${formatDate(episode.startAt)}`);
     if (episode.endAt) {

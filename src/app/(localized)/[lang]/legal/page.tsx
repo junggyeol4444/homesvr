@@ -35,7 +35,8 @@ export default function LegalPage({ params }: LegalPageProps) {
       <section className="card space-y-3">
         <h2 className="text-xl font-semibold">{dictionary.legal.copyright}</h2>
         <p className="text-sm text-slate-600 dark:text-slate-300">
-          모든 콘텐츠의 저작권은 4444 크루와 협력 파트너에 있습니다. 무단 전재·배포를 금지하며, 인용 시 출처를 명확히 기재해주세요.
+          모든 콘텐츠의 저작권은 쌀가루집안과 협력 파트너에게 있습니다. 무단 전재·배포를 금지하며, 인용 시 출처를 명확히 기재해
+          주세요.
         </p>
       </section>
       <section className="card space-y-3">

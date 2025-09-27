@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getVods } from '@/lib/data';
+import { getVods, getMembers } from '@/lib/data';
 import { getDictionary, type SupportedLanguage } from '@/i18n/dictionaries';
 import { VodFilters } from './vod-filters';
 import { StructuredData } from '@/components/structured-data';
@@ -26,11 +26,12 @@ export default function VodPage({ params }: VodPageProps) {
   const lang = (params.lang ?? 'ko') as SupportedLanguage;
   const dictionary = getDictionary(lang);
   const allVods = getVods();
+  const memberLookup = Object.fromEntries(getMembers().map((member) => [member.slug, member.name]));
   const structuredData = allVods.slice(0, 10).map((vod) => vodJsonLd(vod));
 
   return (
     <>
-      <VodFilters vods={allVods} dictionary={dictionary} lang={lang} />
+      <VodFilters vods={allVods} dictionary={dictionary} lang={lang} memberLookup={memberLookup} />
       {structuredData.length ? <StructuredData data={structuredData} /> : null}
     </>
   );

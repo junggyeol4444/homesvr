@@ -51,6 +51,7 @@ export default function MemberPage({ params }: MemberPageProps) {
   if (!member) {
     notFound();
   }
+  const memberLookup = Object.fromEntries(getMembers().map((item) => [item.slug, item.name]));
   const posts = getPostsByAuthor(member.slug).slice(0, 3);
   const featuredVods = member.featuredVods
     .map((id) => getVodById(id))
@@ -79,7 +80,7 @@ export default function MemberPage({ params }: MemberPageProps) {
           <h2 className="section-title">{dictionary.members.featuredVods}</h2>
         </div>
         {featuredVods.length ? (
-          <VodGallery vods={featuredVods} dictionary={dictionary} lang={lang} />
+          <VodGallery vods={featuredVods} dictionary={dictionary} lang={lang} memberLookup={memberLookup} />
         ) : (
           <p className="text-sm text-slate-500 dark:text-slate-400">{dictionary.common.empty}</p>
         )}

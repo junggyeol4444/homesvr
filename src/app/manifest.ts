@@ -3,8 +3,8 @@ import { siteConfig } from '@/lib/site';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${siteConfig.name} Hub`,
-    short_name: '4444 Crew',
+    name: `${siteConfig.name} 허브`,
+    short_name: siteConfig.name,
     description: siteConfig.description,
     start_url: '/',
     display: 'standalone',

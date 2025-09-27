@@ -42,7 +42,7 @@ export function EpisodeCard({ episode, lang, onClick }: EpisodeCardProps) {
       <div className="mt-4 flex flex-1 flex-col">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{episode.title}</h3>
         <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-          {formatTimeRange(episode.startAt, episode.endAt, lang)}
+          {formatTimeRange(episode.startAt, lang, episode.endAt)}
         </p>
         {episode.description ? (
           <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{episode.description}</p>

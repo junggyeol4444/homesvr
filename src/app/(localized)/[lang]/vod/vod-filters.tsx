@@ -10,9 +10,10 @@ interface VodFiltersProps {
   vods: Vod[];
   dictionary: ReturnType<typeof import('@/i18n/dictionaries').getDictionary>;
   lang: SupportedLanguage;
+  memberLookup: Record<string, string>;
 }
 
-export function VodFilters({ vods, dictionary, lang }: VodFiltersProps) {
+export function VodFilters({ vods, dictionary, lang, memberLookup }: VodFiltersProps) {
   const [platform, setPlatform] = useState<string>('');
   const [series, setSeries] = useState<string>('');
   const [guest, setGuest] = useState<string>('');
@@ -99,7 +100,7 @@ export function VodFilters({ vods, dictionary, lang }: VodFiltersProps) {
         />
       </div>
       {filtered.length ? (
-        <VodGallery vods={filtered} dictionary={dictionary} lang={lang} />
+        <VodGallery vods={filtered} dictionary={dictionary} lang={lang} memberLookup={memberLookup} />
       ) : (
         <p className="text-sm text-slate-500 dark:text-slate-400">{dictionary.common.empty}</p>
       )}

@@ -31,7 +31,7 @@ export function isLive(start: string, end?: string) {
   return isWithinInterval(now, { start: new Date(start), end: new Date(end) });
 }
 
-export function formatTimeRange(start: string, end?: string, lang: SupportedLanguage) {
+export function formatTimeRange(start: string, lang: SupportedLanguage, end?: string) {
   const locale = lang === 'ko' ? ko : enUS;
   const startDate = new Date(start);
   if (!end) {

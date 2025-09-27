@@ -61,7 +61,7 @@ export function siteJsonLd() {
     url: siteConfig.url,
     description: siteConfig.description,
     email: siteConfig.contactEmail,
-    sameAs: Object.values(siteConfig.socials)
+    sameAs: Object.values(siteConfig.socials).filter((value) => value && value !== '#')
   };
 }
 
@@ -100,11 +100,16 @@ export function vodJsonLd(vod: Vod) {
           watchUrl: `https://www.youtube.com/watch?v=${vod.videoId}`,
           embedUrl: `https://www.youtube.com/embed/${vod.videoId}`
         };
-      case 'tiktok':
+      case 'tiktok': {
+        const base = siteConfig.socials.tiktok?.replace(/\/$/, '') ?? '';
+        const handleMatch = base.match(/@[^/?]+/);
+        const handleSegment = handleMatch ? handleMatch[0] : '';
+        const profileUrl = handleSegment ? `https://www.tiktok.com/${handleSegment}` : 'https://www.tiktok.com';
         return {
-          watchUrl: `https://www.tiktok.com/@4444crew/video/${vod.videoId}`,
+          watchUrl: `${profileUrl}/video/${vod.videoId}`,
           embedUrl: `https://www.tiktok.com/embed/${vod.videoId}`
         };
+      }
       case 'chzzk':
         return {
           watchUrl: `https://chzzk.naver.com/live/${vod.videoId}`,

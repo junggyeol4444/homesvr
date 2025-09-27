@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { HeroNextEpisode } from '@/components/hero-next-episode';
 import { PostCard } from '@/components/post-card';
 import { StructuredData } from '@/components/structured-data';
-import { getUpcomingEpisode, getPosts, getVods } from '@/lib/data';
+import { getUpcomingEpisode, getPosts, getVods, getMembers } from '@/lib/data';
 import { getDictionary, type SupportedLanguage, supportedLanguages } from '@/i18n/dictionaries';
 import { episodeJsonLd, vodJsonLd, buildMetadata } from '@/lib/seo';
 import { VodGallery } from './vod-gallery';
@@ -35,6 +35,7 @@ export default function HomePage({ params }: PageProps) {
   const upcoming = getUpcomingEpisode();
   const latestPosts = getPosts().slice(0, 3);
   const highlights = getVods().slice(0, 3);
+  const memberLookup = Object.fromEntries(getMembers().map((member) => [member.slug, member.name]));
   const structuredData = [
     ...(upcoming ? [episodeJsonLd(upcoming)] : []),
     ...highlights.map((vod) => vodJsonLd(vod))
@@ -51,9 +52,13 @@ export default function HomePage({ params }: PageProps) {
           </div>
         </div>
         <div className="mt-6 card-grid">
-          {latestPosts.map((post) => (
-            <PostCard key={post.id} post={post} lang={lang} />
-          ))}
+          {latestPosts.length ? (
+            latestPosts.map((post) => <PostCard key={post.id} post={post} lang={lang} />)
+          ) : (
+            <p className="col-span-full rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+              {dictionary.common.empty}
+            </p>
+          )}
         </div>
       </section>
       <section>
@@ -64,7 +69,7 @@ export default function HomePage({ params }: PageProps) {
           </div>
         </div>
         <Suspense fallback={<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">{Array.from({ length: 3 }).map((_, index) => <div key={index} className="skeleton h-64" />)}</div>}>
-          <VodGallery vods={highlights} dictionary={dictionary} lang={lang} />
+          <VodGallery vods={highlights} dictionary={dictionary} lang={lang} memberLookup={memberLookup} />
         </Suspense>
       </section>
       {structuredData.length ? <StructuredData data={structuredData} /> : null}

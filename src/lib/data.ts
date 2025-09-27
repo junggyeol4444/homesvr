@@ -1,15 +1,40 @@
-import episodesData from '@/content/episodes.json';
+import fs from 'fs';
+import path from 'path';
 import membersData from '@/content/members.json';
-import postsData from '@/content/posts.json';
 import vodsData from '@/content/vods.json';
 import type { Episode, Member, Post, Vod } from '@/content/types';
 import { isUpcoming } from './datetime';
 
-const episodes = (episodesData as Episode[]).map((episode) => ({ ...episode }));
+const dataDir = path.join(process.cwd(), 'src', 'content');
+
+function readJsonFile<T>(filename: string, fallback: T): T {
+  try {
+    const filePath = path.join(dataDir, filename);
+    if (!fs.existsSync(filePath)) {
+      return fallback;
+    }
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    if (!raw.trim()) {
+      return fallback;
+    }
+    return JSON.parse(raw) as T;
+  } catch (error) {
+    console.error(`Failed to read ${filename}`, error);
+    return fallback;
+  }
+}
+
+function loadEpisodes(): Episode[] {
+  return readJsonFile<Episode[]>('episodes.json', []).map((episode) => ({ ...episode }));
+}
+
+function loadPosts(): Post[] {
+  return readJsonFile<Post[]>('posts.json', [])
+    .map((post) => ({ ...post }))
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+}
+
 const members = (membersData as Member[]).map((member) => ({ ...member }));
-const posts = (postsData as Post[])
-  .map((post) => ({ ...post }))
-  .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 const vods = (vodsData as Vod[])
   .map((vod) => ({ ...vod }))
   .sort((a, b) => {
@@ -31,31 +56,34 @@ export function getMemberBySlug(slug: string) {
 }
 
 export function getEpisodes() {
-  return episodes.filter((episode) => episode.published).sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
+  return loadEpisodes()
+    .filter((episode) => episode.published)
+    .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
 }
 
 export function getUpcomingEpisode(): Episode | undefined {
-  return getEpisodes()
-    .filter((episode) => isUpcoming(episode.startAt))
+  return loadEpisodes()
+    .filter((episode) => episode.published && isUpcoming(episode.startAt))
     .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime())[0];
 }
 
 export function getUpcomingEpisodes(limit = 6) {
-  return getEpisodes()
-    .filter((episode) => isUpcoming(episode.startAt))
+  return loadEpisodes()
+    .filter((episode) => episode.published && isUpcoming(episode.startAt))
+    .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime())
     .slice(0, limit);
 }
 
 export function getPosts(): Post[] {
-  return posts;
+  return loadPosts();
 }
 
 export function getLatestPosts(limit = 3) {
-  return posts.slice(0, limit);
+  return loadPosts().slice(0, limit);
 }
 
 export function getPostBySlug(slug: string) {
-  return posts.find((post) => post.slug === slug);
+  return loadPosts().find((post) => post.slug === slug);
 }
 
 export function getVods(): Vod[] {
@@ -67,11 +95,11 @@ export function getVodById(id: string) {
 }
 
 export function getPostsByAuthor(slug: string) {
-  return posts.filter((post) => post.author === slug);
+  return loadPosts().filter((post) => post.author === slug);
 }
 
 export function getEpisodesByGuest(slug: string) {
-  return getEpisodes().filter((episode) => episode.guests.includes(slug));
+  return loadEpisodes().filter((episode) => episode.guests.includes(slug));
 }
 
 export function getMembersBySlugList(slugs: string[]) {

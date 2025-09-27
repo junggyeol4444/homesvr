@@ -12,22 +12,22 @@ const noto = Noto_Sans_KR({ subsets: ['latin'], weight: ['400', '500', '700'] })
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — Official Hub`,
+    default: `${siteConfig.name} — 공식 홈페이지`,
     template: `%s — ${siteConfig.name}`
   },
   description: siteConfig.description,
-  keywords: ['방송', '크루', '4444', '라이브', 'VOD', '커뮤니티'],
+  keywords: ['쌀가루집안', '가족', '공지', '일정', '라이브', '커뮤니티'],
   openGraph: {
     siteName: siteConfig.name,
     type: 'website',
     locale: siteConfig.locale,
     url: siteConfig.url,
-    title: `${siteConfig.name} — Official Hub`,
+    title: `${siteConfig.name} — 공식 홈페이지`,
     description: siteConfig.description
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${siteConfig.name} — Official Hub`,
+    title: `${siteConfig.name} — 공식 홈페이지`,
     description: siteConfig.description
   },
   icons: {

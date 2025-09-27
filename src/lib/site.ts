@@ -1,17 +1,17 @@
 export const siteConfig = {
-  name: '4444 Crew',
-  slogan: 'Live shows, highlights and community updates',
-  url: 'https://4444crew.com',
+  name: '쌀가루집안',
+  slogan: '우리 가족을 위한 온라인 거실',
+  url: 'https://ssalgaru.example.com',
   description:
-    '4444 방송 크루의 공식 허브입니다. 다음 방송 일정, 멤버, 공지, 하이라이트 VOD를 한 곳에서 확인하세요.',
+    '쌀가루집안의 소식과 일정을 한 곳에서 확인하세요. 가족 모임 공지와 방송 일정을 직접 등록해 관리할 수 있습니다.',
   locale: 'ko_KR',
-  contactEmail: 'hello@4444crew.com',
+  contactEmail: 'hello@ssalgaru.example.com',
   socials: {
-    youtube: 'https://youtube.com/@4444crew',
-    chzzk: 'https://chzzk.naver.com/4444crew',
-    tiktok: 'https://www.tiktok.com/@4444crew',
-    instagram: 'https://instagram.com/aurora4444',
-    x: 'https://x.com/aurora4444'
+    youtube: '#',
+    chzzk: '#',
+    tiktok: '#',
+    instagram: '#',
+    x: '#'
   }
 };
 

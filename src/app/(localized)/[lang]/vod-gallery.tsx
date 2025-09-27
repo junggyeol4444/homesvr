@@ -10,9 +10,10 @@ interface VodGalleryProps {
   vods: Vod[];
   dictionary: ReturnType<typeof import('@/i18n/dictionaries').getDictionary>;
   lang: SupportedLanguage;
+  memberLookup: Record<string, string>;
 }
 
-export function VodGallery({ vods, dictionary, lang }: VodGalleryProps) {
+export function VodGallery({ vods, dictionary, lang, memberLookup }: VodGalleryProps) {
   const [selected, setSelected] = useState<Vod | null>(null);
   return (
     <>
@@ -21,7 +22,13 @@ export function VodGallery({ vods, dictionary, lang }: VodGalleryProps) {
           <VodCard key={vod.id} vod={vod} onSelect={setSelected} />
         ))}
       </div>
-      <VodPlayerModal vod={selected} onClose={() => setSelected(null)} dictionary={dictionary} lang={lang} />
+      <VodPlayerModal
+        vod={selected}
+        onClose={() => setSelected(null)}
+        dictionary={dictionary}
+        lang={lang}
+        memberLookup={memberLookup}
+      />
     </>
   );
 }

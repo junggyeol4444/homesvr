@@ -5,6 +5,7 @@ import type { Episode } from '@/content/types';
 import type { SupportedLanguage } from '@/i18n/dictionaries';
 import { formatCountdown, formatDate, isLive } from '@/lib/datetime';
 import { trackEvent } from '@/lib/analytics';
+import { siteConfig } from '@/lib/site';
 
 interface HeroNextEpisodeProps {
   episode?: Episode;
@@ -14,15 +15,15 @@ interface HeroNextEpisodeProps {
 
 const platformLinks: Record<string, { href: string; label: string }> = {
   youtube: {
-    href: 'https://youtube.com/@4444crew',
+    href: siteConfig.socials.youtube,
     label: 'YouTube'
   },
   chzzk: {
-    href: 'https://chzzk.naver.com/4444crew',
+    href: siteConfig.socials.chzzk,
     label: 'Chzzk'
   },
   tiktok: {
-    href: 'https://www.tiktok.com/@4444crew',
+    href: siteConfig.socials.tiktok,
     label: 'TikTok'
   }
 };
@@ -56,7 +57,7 @@ export function HeroNextEpisode({ episode, dictionary, lang }: HeroNextEpisodePr
             {dictionary.hero.nextShow}
           </p>
           <h1 className="mt-3 text-3xl font-bold md:text-5xl">
-            {episode ? episode.title : '4444 Crew Live'}
+            {episode ? episode.title : `${siteConfig.name} 라이브`}
           </h1>
           <p className="mt-3 text-base text-white/80">
             {episode
@@ -89,20 +90,22 @@ export function HeroNextEpisode({ episode, dictionary, lang }: HeroNextEpisodePr
                 {dictionary.hero.watchOn} · {platformLinks[episode.platform]?.label ?? episode.platform}
               </a>
             ) : null}
-            {(['youtube', 'chzzk', 'tiktok'] as const).map((platform) => (
-              <a
-                key={platform}
-                href={platformLinks[platform].href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="button-secondary border-white/40 text-white hover:bg-white/10"
-                onClick={() =>
-                  trackEvent({ name: 'hero_platform_click', payload: { platform, position: 'hero-secondary' } })
-                }
-              >
-                {dictionary.hero[`cta${platform.charAt(0).toUpperCase() + platform.slice(1)}` as 'ctaYoutube']}
-              </a>
-            ))}
+            {(['youtube', 'chzzk', 'tiktok'] as const)
+              .filter((platform) => platformLinks[platform].href && platformLinks[platform].href !== '#')
+              .map((platform) => (
+                <a
+                  key={platform}
+                  href={platformLinks[platform].href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="button-secondary border-white/40 text-white hover:bg-white/10"
+                  onClick={() =>
+                    trackEvent({ name: 'hero_platform_click', payload: { platform, position: 'hero-secondary' } })
+                  }
+                >
+                  {dictionary.hero[`cta${platform.charAt(0).toUpperCase() + platform.slice(1)}` as 'ctaYoutube']}
+                </a>
+              ))}
           </div>
         </div>
         {episode ? (

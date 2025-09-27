@@ -142,7 +142,7 @@ const dictionaries: Record<SupportedLanguage, Dictionary> = {
     },
     members: {
       title: '크루 멤버',
-      intro: '4444 크루를 소개합니다. 각 멤버의 SNS와 대표 콘텐츠를 확인하세요.',
+      intro: '쌀가루집안 구성원을 소개합니다. 각 멤버의 이야기를 확인하세요.',
       socials: 'SNS',
       notices: '공지',
       featuredVods: '대표 VOD',
@@ -225,7 +225,7 @@ const dictionaries: Record<SupportedLanguage, Dictionary> = {
     },
     members: {
       title: 'Crew Members',
-      intro: 'Meet the 4444 crew. Explore their socials and featured videos.',
+      intro: 'Meet the Ssalgaru family and discover their stories.',
       socials: 'Socials',
       notices: 'Notices',
       featuredVods: 'Featured VODs',

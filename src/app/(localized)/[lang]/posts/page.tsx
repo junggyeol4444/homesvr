@@ -35,9 +35,13 @@ export default function PostsPage({ params }: PostsPageProps) {
         <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">{dictionary.posts.intro}</p>
       </header>
       <div className="card-grid">
-        {allPosts.map((post) => (
-          <PostCard key={post.id} post={post} lang={lang} />
-        ))}
+        {allPosts.length ? (
+          allPosts.map((post) => <PostCard key={post.id} post={post} lang={lang} />)
+        ) : (
+          <p className="col-span-full rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+            {dictionary.common.empty}
+          </p>
+        )}
       </div>
       {structuredData.length ? <StructuredData data={structuredData} /> : null}
     </div>

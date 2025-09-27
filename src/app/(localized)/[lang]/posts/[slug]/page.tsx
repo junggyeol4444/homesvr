@@ -5,9 +5,9 @@ import ReactMarkdown from 'react-markdown';
 import { getPostBySlug, getPosts } from '@/lib/data';
 import { formatDate } from '@/lib/datetime';
 import { getDictionary, type SupportedLanguage, supportedLanguages } from '@/i18n/dictionaries';
-import { trackEvent } from '@/lib/analytics';
 import { StructuredData } from '@/components/structured-data';
 import { buildMetadata, postJsonLd } from '@/lib/seo';
+import { PostShareButtons } from '@/components/post-share-buttons';
 
 interface PostPageProps {
   params: { lang?: string; slug: string };
@@ -46,26 +46,10 @@ export default function PostPage({ params }: PostPageProps) {
   if (!post) {
     notFound();
   }
+  const resolvedPost = post;
 
-  const title = lang === 'en' && post.title_en ? post.title_en : post.title;
-  const body = lang === 'en' && post.body_en ? post.body_en : post.body;
-
-  const shareTargets = [
-    {
-      key: 'x',
-      label: 'X',
-      href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://example.com/posts/${post.slug}`)}&text=${encodeURIComponent(title)}`
-    },
-    { key: 'copy', label: dictionary.common.copyLink, href: '#' }
-  ];
-
-  async function handleShare(target: string) {
-    trackEvent({ name: 'post_share_click', payload: { id: post.id, target } });
-    if (target === 'copy' && typeof window !== 'undefined') {
-      await navigator.clipboard.writeText(window.location.href);
-      alert(dictionary.common.copied);
-    }
-  }
+  const title = lang === 'en' && resolvedPost.title_en ? resolvedPost.title_en : resolvedPost.title;
+  const body = lang === 'en' && resolvedPost.body_en ? resolvedPost.body_en : resolvedPost.body;
 
   return (
     <article className="prose prose-slate dark:prose-invert max-w-none">
@@ -74,32 +58,12 @@ export default function PostPage({ params }: PostPageProps) {
       </Link>
       <h1 className="mt-4 text-4xl font-bold">{title}</h1>
       <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-        {dictionary.common.published}: {formatDate(post.publishedAt, lang, 'PPP')}
+        {dictionary.common.published}: {formatDate(resolvedPost.publishedAt, lang, 'PPP')}
       </p>
-      {post.cover ? <img src={post.cover} alt={title} className="mt-6 w-full rounded-2xl" /> : null}
+      {resolvedPost.cover ? <img src={resolvedPost.cover} alt={title} className="mt-6 w-full rounded-2xl" /> : null}
       <ReactMarkdown className="mt-6">{body}</ReactMarkdown>
-      <div className="mt-10 flex flex-wrap gap-3">
-        {shareTargets.map((target) => (
-          <a
-            key={target.key}
-            href={target.href}
-            target={target.key === 'copy' ? undefined : '_blank'}
-            rel="noopener noreferrer"
-            className="button-secondary"
-            onClick={async (event) => {
-              if (target.key === 'copy') {
-                event.preventDefault();
-                await handleShare(target.key);
-              } else {
-                handleShare(target.key);
-              }
-            }}
-          >
-            {target.label}
-          </a>
-        ))}
-      </div>
-      <StructuredData data={postJsonLd(post, lang)} />
+      <PostShareButtons postId={resolvedPost.id} slug={resolvedPost.slug} title={title} dictionary={dictionary} />
+      <StructuredData data={postJsonLd(resolvedPost, lang)} />
     </article>
   );
 }

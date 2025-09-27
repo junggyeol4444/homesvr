@@ -4,13 +4,13 @@ import { useEffect, useMemo } from 'react';
 import type { Vod } from '@/content/types';
 import type { SupportedLanguage } from '@/i18n/dictionaries';
 import { formatDate, formatVodDuration } from '@/lib/datetime';
-import { getMembersBySlugList } from '@/lib/data';
 
 interface VodPlayerModalProps {
   vod: Vod | null;
   onClose: () => void;
   lang: SupportedLanguage;
   dictionary: ReturnType<typeof import('@/i18n/dictionaries').getDictionary>;
+  memberLookup: Record<string, string>;
 }
 
 function getEmbedUrl(vod: Vod) {
@@ -26,7 +26,7 @@ function getEmbedUrl(vod: Vod) {
   }
 }
 
-export function VodPlayerModal({ vod, onClose, lang, dictionary }: VodPlayerModalProps) {
+export function VodPlayerModal({ vod, onClose, lang, dictionary, memberLookup }: VodPlayerModalProps) {
   useEffect(() => {
     function handleKey(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -43,7 +43,10 @@ export function VodPlayerModal({ vod, onClose, lang, dictionary }: VodPlayerModa
     };
   }, [vod, onClose]);
 
-  const memberDetails = useMemo(() => (vod ? getMembersBySlugList(vod.members) : []), [vod]);
+  const memberNames = useMemo(
+    () => (vod ? vod.members.map((slug) => memberLookup[slug]).filter(Boolean) : []),
+    [vod, memberLookup]
+  );
 
   if (!vod) {
     return null;
@@ -82,10 +85,10 @@ export function VodPlayerModal({ vod, onClose, lang, dictionary }: VodPlayerModa
                 {formatVodDuration(vod.duration, lang)}
               </span>
             ) : null}
-            {memberDetails.length ? (
+            {memberNames.length ? (
               <span>
                 {dictionary.common.featuring}:{' '}
-                {memberDetails.map((member) => member.name).join(', ')}
+                {memberNames.join(', ')}
               </span>
             ) : null}
           </div>
