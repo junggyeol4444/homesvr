@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { STORAGE_KEYS } from '@/lib/storage';
 
 interface Notice {
   id: string;
@@ -8,8 +9,6 @@ interface Notice {
   content: string;
   createdAt: string;
 }
-
-const STORAGE_KEY = 'ssalgageul-notices';
 
 function isNoticeArray(value: unknown): value is Notice[] {
   return (
@@ -46,7 +45,7 @@ export function NoticeBoard() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
+      const stored = window.localStorage.getItem(STORAGE_KEYS.notices);
       if (!stored) return;
       const parsed = JSON.parse(stored);
       if (isNoticeArray(parsed)) {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { STORAGE_KEYS } from '@/lib/storage';
 
 interface ScheduleItem {
   id: string;
@@ -8,8 +9,6 @@ interface ScheduleItem {
   description: string;
   date: string;
 }
-
-const STORAGE_KEY = 'ssalgageul-schedule';
 
 function isScheduleArray(value: unknown): value is ScheduleItem[] {
   return (
@@ -45,7 +44,7 @@ export function ScheduleBoard() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
+      const stored = window.localStorage.getItem(STORAGE_KEYS.schedule);
       if (!stored) return;
       const parsed = JSON.parse(stored);
       if (isScheduleArray(parsed)) {

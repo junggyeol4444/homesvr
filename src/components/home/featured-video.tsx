@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-
-const STORAGE_KEY = 'ssalgageul-featured-video';
+import { STORAGE_KEYS } from '@/lib/storage';
 
 function buildEmbedUrl(videoId: string) {
   return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&color=white`;
@@ -14,7 +13,7 @@ export function FeaturedVideo() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
+      const stored = window.localStorage.getItem(STORAGE_KEYS.video);
       if (stored) {
         setVideoId(stored);
       }

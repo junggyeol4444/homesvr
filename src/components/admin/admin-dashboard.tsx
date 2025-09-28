@@ -1,6 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { generateId } from '@/lib/id';
+import { membersFromLegacyCategories, normalizeStoredMembers } from '@/lib/members';
+import { STORAGE_KEYS } from '@/lib/storage';
+import { createUniqueSlug } from '@/lib/slug';
+import type { StoredMember } from '@/types/stored-member';
 
 type Notice = {
   id: string;
@@ -15,19 +21,6 @@ type ScheduleItem = {
   description: string;
   date: string;
 };
-
-const STORAGE_KEYS = {
-  notices: 'ssalgageul-notices',
-  schedule: 'ssalgageul-schedule',
-  video: 'ssalgageul-featured-video',
-  categories: 'ssalgageul-categories'
-} as const;
-
-const defaultCategories = ['메인', '게임', '이야기', '먹방', '리뷰', 'VLOG', '이벤트'];
-
-function generateId() {
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-}
 
 function normalizeVideoInput(value: string) {
   const trimmed = value.trim();
@@ -68,22 +61,45 @@ function loadArrayFromStorage<T>(key: string, fallback: T[]): T[] {
 export function AdminDashboard() {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
-  const [categories, setCategories] = useState<string[]>(defaultCategories);
+  const [members, setMembers] = useState<StoredMember[]>([]);
   const [videoId, setVideoId] = useState('');
   const [videoInput, setVideoInput] = useState('');
   const [status, setStatus] = useState<string | null>(null);
 
   const [noticeForm, setNoticeForm] = useState({ title: '', content: '' });
   const [scheduleForm, setScheduleForm] = useState({ title: '', description: '', date: '' });
-  const [categoryInput, setCategoryInput] = useState('');
+  const [memberForm, setMemberForm] = useState({ name: '', role: '', description: '', profileUrl: '', avatarUrl: '' });
 
   useEffect(() => {
     setNotices(loadArrayFromStorage<Notice>(STORAGE_KEYS.notices, []));
     setSchedule(loadArrayFromStorage<ScheduleItem>(STORAGE_KEYS.schedule, []));
-    const storedCategories = loadArrayFromStorage<string>(STORAGE_KEYS.categories, defaultCategories);
-    setCategories(storedCategories.length ? storedCategories : defaultCategories);
 
     if (typeof window !== 'undefined') {
+      try {
+        const rawMembers = window.localStorage.getItem(STORAGE_KEYS.members);
+        if (rawMembers) {
+          const parsed = JSON.parse(rawMembers);
+          const normalized = normalizeStoredMembers(parsed);
+          setMembers(normalized);
+          window.localStorage.setItem(STORAGE_KEYS.members, JSON.stringify(normalized));
+        } else {
+          const legacy = window.localStorage.getItem(STORAGE_KEYS.legacyCategories);
+          if (legacy) {
+            const parsedLegacy = JSON.parse(legacy);
+            const migrated = membersFromLegacyCategories(parsedLegacy);
+            setMembers(migrated);
+            if (migrated.length) {
+              window.localStorage.setItem(STORAGE_KEYS.members, JSON.stringify(migrated));
+            }
+          } else {
+            setMembers([]);
+          }
+        }
+      } catch (error) {
+        console.error('멤버 정보를 불러오지 못했습니다.', error);
+        setMembers([]);
+      }
+
       const storedVideo = window.localStorage.getItem(STORAGE_KEYS.video);
       if (storedVideo) {
         setVideoId(storedVideo);
@@ -119,10 +135,10 @@ export function AdminDashboard() {
     }
   }
 
-  function persistCategories(next: string[]) {
-    setCategories(next);
+  function persistMembers(next: StoredMember[]) {
+    setMembers(next);
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem(STORAGE_KEYS.categories, JSON.stringify(next));
+      window.localStorage.setItem(STORAGE_KEYS.members, JSON.stringify(next));
     }
   }
 
@@ -186,23 +202,42 @@ export function AdminDashboard() {
     setStatus('하이라이트 영상이 업데이트되었습니다.');
   };
 
-  const handleCategoriesSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleMemberSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const trimmed = categoryInput.trim();
-    if (!trimmed) {
-      setStatus('추가할 카테고리 이름을 입력해 주세요.');
+    const trimmedName = memberForm.name.trim();
+    if (!trimmedName) {
+      setStatus('멤버 이름을 입력해 주세요.');
       return;
     }
-    const next = [...new Set([trimmed, ...categories])];
-    persistCategories(next);
-    setCategoryInput('');
-    setStatus('카테고리가 추가되었습니다.');
+
+    const usedSlugs = new Set(members.map((member) => member.slug));
+    const slug = createUniqueSlug(trimmedName, usedSlugs);
+    const trimmedRole = memberForm.role.trim();
+    const trimmedDescription = memberForm.description.trim();
+    const trimmedProfileUrl = memberForm.profileUrl.trim();
+    const trimmedAvatarUrl = memberForm.avatarUrl.trim();
+
+    const nextMember: StoredMember = {
+      id: generateId(),
+      name: trimmedName,
+      slug,
+      role: trimmedRole || undefined,
+      description: trimmedDescription || undefined,
+      profileUrl: trimmedProfileUrl || undefined,
+      avatarUrl: trimmedAvatarUrl || undefined,
+      createdAt: new Date().toISOString()
+    };
+
+    const next = [nextMember, ...members];
+    persistMembers(next);
+    setMemberForm({ name: '', role: '', description: '', profileUrl: '', avatarUrl: '' });
+    setStatus('새 멤버가 등록되었습니다.');
   };
 
-  const handleCategoryDelete = (target: string) => {
-    const next = categories.filter((category) => category !== target);
-    persistCategories(next);
-    setStatus('카테고리가 삭제되었습니다.');
+  const handleMemberDelete = (id: string) => {
+    const next = members.filter((member) => member.id !== id);
+    persistMembers(next);
+    setStatus('멤버가 삭제되었습니다.');
   };
 
   const handleLogout = async () => {
@@ -219,7 +254,7 @@ export function AdminDashboard() {
         <div>
           <p className="text-sm uppercase tracking-[0.3em] text-orange-300">쌀가루집안</p>
           <h1 className="mt-2 text-3xl font-bold text-white">관리자 대시보드</h1>
-          <p className="mt-2 text-sm text-slate-300">공지, 방송 일정, 카테고리, 하이라이트 영상을 직접 관리할 수 있습니다.</p>
+          <p className="mt-2 text-sm text-slate-300">공지, 방송 일정, 멤버, 하이라이트 영상을 직접 관리할 수 있습니다.</p>
         </div>
         <button onClick={handleLogout} className="button-secondary h-11 px-6 text-sm">로그아웃</button>
       </header>
@@ -388,35 +423,132 @@ export function AdminDashboard() {
 
       <section className="glass-card space-y-6">
         <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold text-white">카테고리 관리</h2>
-          <p className="text-sm text-slate-300">홈페이지 왼쪽에 노출되는 카테고리 목록을 자유롭게 조정할 수 있습니다.</p>
+          <h2 className="text-2xl font-semibold text-white">멤버 관리</h2>
+          <p className="text-sm text-slate-300">홈페이지 사이드바와 멤버 페이지에서 소개될 멤버 정보를 추가하거나 수정할 수 있습니다.</p>
         </div>
-        <form onSubmit={handleCategoriesSubmit} className="flex flex-col gap-3 sm:flex-row">
-          <input
-            type="text"
-            value={categoryInput}
-            onChange={(event) => setCategoryInput(event.target.value)}
-            placeholder="예) 게임"
-            className="flex-1 rounded-2xl border border-white/20 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-300/60"
-          />
-          <button type="submit" className="button-primary">카테고리 추가</button>
+        <form onSubmit={handleMemberSubmit} className="grid gap-4 md:grid-cols-2">
+          <label className="flex flex-col gap-2 text-sm text-slate-200">
+            이름
+            <input
+              type="text"
+              value={memberForm.name}
+              onChange={(event) => setMemberForm((prev) => ({ ...prev, name: event.target.value }))}
+              placeholder="예) 쌀가루"
+              className="rounded-2xl border border-white/20 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-300/60"
+              required
+            />
+          </label>
+          <label className="flex flex-col gap-2 text-sm text-slate-200">
+            역할 (선택)
+            <input
+              type="text"
+              value={memberForm.role}
+              onChange={(event) => setMemberForm((prev) => ({ ...prev, role: event.target.value }))}
+              placeholder="예) 메인 스트리머"
+              className="rounded-2xl border border-white/20 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-300/60"
+            />
+          </label>
+          <label className="md:col-span-2 flex flex-col gap-2 text-sm text-slate-200">
+            소개 (선택)
+            <textarea
+              value={memberForm.description}
+              onChange={(event) => setMemberForm((prev) => ({ ...prev, description: event.target.value }))}
+              rows={4}
+              placeholder="멤버에 대한 간단한 설명을 작성해 주세요."
+              className="rounded-2xl border border-white/20 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-300/60"
+            />
+          </label>
+          <label className="flex flex-col gap-2 text-sm text-slate-200">
+            외부 프로필 링크 (선택)
+            <input
+              type="url"
+              value={memberForm.profileUrl}
+              onChange={(event) => setMemberForm((prev) => ({ ...prev, profileUrl: event.target.value }))}
+              placeholder="https://"
+              className="rounded-2xl border border-white/20 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-300/60"
+            />
+          </label>
+          <label className="flex flex-col gap-2 text-sm text-slate-200">
+            대표 이미지 URL (선택)
+            <input
+              type="url"
+              value={memberForm.avatarUrl}
+              onChange={(event) => setMemberForm((prev) => ({ ...prev, avatarUrl: event.target.value }))}
+              placeholder="https://"
+              className="rounded-2xl border border-white/20 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-300/60"
+            />
+          </label>
+          <div className="md:col-span-2 flex justify-end">
+            <button type="submit" className="button-primary">멤버 추가</button>
+          </div>
         </form>
-        <div className="flex flex-wrap gap-3">
-          {categories.length ? (
-            categories.map((category) => (
-              <div key={category} className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm text-white">
-                <span>{category}</span>
-                <button
-                  type="button"
-                  onClick={() => handleCategoryDelete(category)}
-                  className="text-xs text-orange-200 hover:text-orange-100"
-                >
-                  ×
-                </button>
-              </div>
+        <div className="space-y-3">
+          {members.length ? (
+            members.map((member) => (
+              <article key={member.id} className="rounded-2xl border border-white/10 bg-black/40 p-4">
+                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  <div className="flex gap-4">
+                    {member.avatarUrl ? (
+                      <img
+                        src={member.avatarUrl}
+                        alt={`${member.name} 프로필 이미지`}
+                        className="h-16 w-16 flex-none rounded-full border border-white/20 object-cover"
+                      />
+                    ) : null}
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h3 className="text-lg font-semibold text-white">{member.name}</h3>
+                        {member.role ? (
+                          <span className="rounded-full border border-orange-300/60 bg-orange-400/10 px-3 py-1 text-xs font-semibold text-orange-200">
+                            {member.role}
+                          </span>
+                        ) : null}
+                      </div>
+                      {member.description ? (
+                        <p className="text-sm text-slate-200 whitespace-pre-line">{member.description}</p>
+                      ) : null}
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400">
+                        <span className="rounded-full bg-white/5 px-2 py-1">/members/{member.slug}</span>
+                        {member.profileUrl ? (
+                          <a
+                            href={member.profileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-orange-200 hover:text-orange-100"
+                          >
+                            외부 링크
+                          </a>
+                        ) : null}
+                        {member.createdAt ? (
+                          <time className="text-slate-500">
+                            등록일 {new Date(member.createdAt).toLocaleDateString('ko-KR')}
+                          </time>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      href={`/members/${encodeURIComponent(member.slug)}`}
+                      className="button-secondary h-10 px-4 text-xs"
+                    >
+                      멤버 페이지 보기
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => handleMemberDelete(member.id)}
+                      className="button-secondary h-10 px-4 text-xs text-orange-200 hover:text-orange-100"
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
+              </article>
             ))
           ) : (
-            <p className="text-sm text-slate-300">등록된 카테고리가 없습니다.</p>
+            <p className="rounded-2xl border border-dashed border-white/20 px-4 py-6 text-sm text-slate-300">
+              등록된 멤버가 없습니다. 위 양식을 통해 멤버를 추가해 주세요.
+            </p>
           )}
         </div>
       </section>
