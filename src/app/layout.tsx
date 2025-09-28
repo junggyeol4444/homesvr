@@ -53,7 +53,7 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning className={`${inter.className} ${noto.className}`}>
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+          <div className="flex min-h-screen flex-col bg-gradient-to-br from-orange-100 via-orange-50 to-white text-slate-900 transition-colors duration-200 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
             <SiteHeader />
             <main className="container-responsive flex-1 py-12">{children}</main>
             <SiteFooter />

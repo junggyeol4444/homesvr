@@ -12,12 +12,12 @@ export default function AdminPage() {
   const authenticated = isAdminAuthenticated();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-16 text-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-white py-16 text-slate-900 transition-colors dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
       <div className="container-responsive max-w-5xl space-y-12">
         <div className="text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-orange-300">쌀가루집안</p>
-          <h1 className="mt-3 text-4xl font-bold text-white">관리자 영역</h1>
-          <p className="mt-3 text-sm text-slate-300">
+          <p className="text-sm uppercase tracking-[0.3em] text-orange-500 dark:text-orange-300">쌀가루집안</p>
+          <h1 className="mt-3 text-4xl font-bold text-slate-900 dark:text-white">관리자 영역</h1>
+          <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
             이 페이지는 인증된 관리자만 접근할 수 있습니다. 관리자 비밀번호는 서버 환경 변수로 설정할 수 있습니다.
           </p>
         </div>
