@@ -2,15 +2,21 @@ import Link from 'next/link';
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-slate-200/80 bg-white/70 py-8 text-sm text-slate-600 dark:border-slate-800/70 dark:bg-slate-950/70 dark:text-slate-400">
+    <footer className="border-t border-orange-200/70 bg-white/80 py-10 text-sm text-slate-500 backdrop-blur transition-colors dark:border-white/10 dark:bg-slate-950/80 dark:text-slate-400">
       <div className="container-responsive flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <p>© {new Date().getFullYear()} 4444 Crew. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} 쌀가루집안. All rights reserved.</p>
         <div className="flex flex-wrap items-center gap-4">
-          <Link href="https://tally.so" target="_blank" rel="noopener" className="hover:text-brand-600 dark:hover:text-brand-400">
-            문의하기
+          <Link
+            href="/admin"
+            className="rounded-full border border-orange-200/70 px-4 py-2 text-xs font-medium text-slate-700 transition hover:bg-orange-100 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/10"
+          >
+            관리자 페이지
           </Link>
-          <Link href="/legal" className="hover:text-brand-600 dark:hover:text-brand-400">
-            정책 보기
+          <Link
+            href="mailto:hello@ssalgageul.kr"
+            className="rounded-full border border-orange-200/70 px-4 py-2 text-xs font-medium text-slate-700 transition hover:bg-orange-100 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/10"
+          >
+            문의하기
           </Link>
         </div>
       </div>

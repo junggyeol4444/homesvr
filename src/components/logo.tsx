@@ -2,11 +2,11 @@ import Link from 'next/link';
 
 export function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2 font-semibold text-slate-900 dark:text-white">
-      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg shadow-brand-600/30 dark:bg-brand-500">
-        44
+    <Link href="/" className="flex items-center gap-3 font-semibold text-slate-900 dark:text-white">
+      <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 via-red-400 to-pink-500 text-lg text-white shadow-lg shadow-orange-400/40">
+        쌀
       </span>
-      <span className="text-lg">4444 Crew</span>
+      <span className="text-xl tracking-tight">쌀가루집안</span>
     </Link>
   );
 }
