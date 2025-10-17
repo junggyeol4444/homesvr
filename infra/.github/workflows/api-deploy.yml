@@ -1,0 +1,46 @@
+name: Deploy API to Cloud Run
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+      - 'packages/types/**'
+      - 'packages/config/**'
+      - 'infra/Dockerfile.api'
+      - '.github/workflows/api-deploy.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @homesvr/api test
+      - run: pnpm --filter @homesvr/api build
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - name: Configure gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Build and Deploy
+        run: |
+          IMAGE=gcr.io/${{ secrets.GCP_PROJECT_ID }}/homesvr-api:${GITHUB_SHA::7}
+          gcloud builds submit --tag $IMAGE .
+          gcloud run deploy homesvr-api \
+            --image $IMAGE \
+            --region ${{ secrets.GCP_REGION }} \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-secrets DATABASE_URL=db-connection:latest

@@ -1,0 +1,6 @@
+schedule: every 1 hours
+httpTarget:
+  uri: https://homesvr-api-xxxxxxxx.a.run.app/api/prices/refresh
+  httpMethod: POST
+  oidcToken:
+    serviceAccountEmail: scheduler@project-id.iam.gserviceaccount.com

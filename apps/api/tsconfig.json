@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "noEmit": true,
+    "paths": {
+      "@/types": ["../../packages/types/src"],
+      "@/config": ["../../packages/config/src"]
+    }
+  },
+  "include": ["src", "prisma"]
+}
