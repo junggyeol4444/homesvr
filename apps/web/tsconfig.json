@@ -1,0 +1,47 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@homesvr/ui": [
+        "../../packages/ui/src"
+      ],
+      "@homesvr/types": [
+        "../../packages/types/src"
+      ],
+      "@homesvr/config": [
+        "../../packages/config/src"
+      ]
+    },
+    "jsx": "preserve",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "noEmit": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "incremental": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "src",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

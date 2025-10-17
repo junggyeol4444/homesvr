@@ -1,0 +1,16 @@
+FROM node:20-slim AS base
+WORKDIR /usr/src/app
+COPY package.json pnpm-workspace.yaml turbo.json tsconfig.base.json ./
+COPY packages ./packages
+COPY apps/api ./apps/api
+RUN corepack enable && pnpm install --frozen-lockfile --filter @homesvr/api...
+RUN pnpm --filter @homesvr/api build
+
+FROM node:20-slim AS runner
+WORKDIR /usr/src/app
+ENV NODE_ENV=production
+COPY --from=base /usr/src/app/apps/api/dist ./apps/api/dist
+COPY --from=base /usr/src/app/apps/api/package.json ./apps/api/package.json
+COPY --from=base /usr/src/app/node_modules ./node_modules
+EXPOSE 8080
+CMD ["node", "apps/api/dist/index.js"]

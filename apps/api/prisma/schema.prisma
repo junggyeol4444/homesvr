@@ -1,0 +1,148 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+}
+
+model Product {
+  id               String             @id @default(cuid())
+  slug             String             @unique
+  name             String
+  brand            String
+  summary          String?
+  heroImageUrl     String?
+  releaseDate      DateTime?
+  categoryId       String
+  rating           Float?             @default(0)
+  reviewCount      Int?               @default(0)
+  highlightWeights Json?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  category         Category           @relation(fields: [categoryId], references: [id])
+  specs            ProductSpec[]
+  prices           ProductPrice[]
+  alerts           PriceAlert[]
+  comparisons      ComparisonProduct[]
+  compatibility    CompatibilityTag[] @relation("ProductCompatibility")
+}
+
+model ProductSpec {
+  id          String   @id @default(cuid())
+  productId   String
+  label       String
+  value       String
+  unit        String?
+  category    String?
+  order       Int      @default(0)
+  highlight   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  product     Product  @relation(fields: [productId], references: [id])
+}
+
+model ProductPrice {
+  id           String   @id @default(cuid())
+  productId    String
+  retailer     String
+  amount       Decimal  @db.Decimal(10, 2)
+  currency     String   @default("KRW")
+  url          String
+  partnerCode  String?
+  capturedAt   DateTime @default(now())
+  lowest       Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  product      Product  @relation(fields: [productId], references: [id])
+}
+
+model ComparisonSnapshot {
+  id          String              @id @default(cuid())
+  name        String?
+  productIds  String[]
+  weights     Json
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  products    ComparisonProduct[]
+}
+
+model ComparisonProduct {
+  id         String             @id @default(cuid())
+  productId  String
+  snapshotId String
+  score      Float?
+  createdAt  DateTime           @default(now())
+  product    Product            @relation(fields: [productId], references: [id])
+  snapshot   ComparisonSnapshot @relation(fields: [snapshotId], references: [id])
+}
+
+model SurveyQuestion {
+  id          String          @id @default(cuid())
+  order       Int             @default(0)
+  title       String
+  description String?
+  weightKey   String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  options     SurveyOption[]
+}
+
+model SurveyOption {
+  id          String         @id @default(cuid())
+  questionId  String
+  label       String
+  description String?
+  value       Int            @default(0)
+  weightKey   String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  question    SurveyQuestion @relation(fields: [questionId], references: [id])
+}
+
+model SurveyResponse {
+  id                    String   @id @default(cuid())
+  weights               Json
+  recommendedProductIds String[]
+  contactEmail          String?
+  contactSlack          String?
+  contactTelegram       String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model PriceAlert {
+  id             String   @id @default(cuid())
+  productId      String
+  targetPrice    Decimal  @db.Decimal(10, 2)
+  email          String?
+  slackWebhook   String?
+  telegramChatId String?
+  salt           String
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  product        Product  @relation(fields: [productId], references: [id])
+}
+
+model CompatibilityTag {
+  id               String   @id @default(cuid())
+  productId        String
+  label            String
+  description      String?
+  relatedProductIds String[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  product          Product  @relation("ProductCompatibility", fields: [productId], references: [id])
+}
